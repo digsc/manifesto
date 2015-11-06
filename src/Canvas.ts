@@ -26,47 +26,89 @@ module Manifesto {
             return images;
         }
 
-        // todo: Prefer thumbnail service to image service if supplied and if
-        // the thumbnail service can provide a satisfactory size +/- x pixels.
-        getThumbUri(width: number, height: number): string {
+        getThumbnail(options?: ThumbOptions): Thumb {
 
-            var uri;
-            var images: IAnnotation[] = this.getImages();
+            var thumb: Thumb = new Thumb();
 
-            if (images && images.length) {
-                var firstImage = images[0];
-                var resource: IResource = firstImage.getResource();
-                var services: IService[] = resource.getServices();
+            var thumbnail = this.getProperty('thumbnail');
 
-                for (var i = 0; i < services.length; i++) {
-                    var service:IService = services[i];
-                    var profile:string = service.getProfile().toString();
-                    var id = service.id;
+            if (thumbnail) {
 
-                    if (!_endsWith(id, '/')) {
-                        id += '/';
-                    }
-
-                    if (profile === ServiceProfile.STANFORDIIIFIMAGECOMPLIANCE1.toString() ||
-                        profile === ServiceProfile.STANFORDIIIFIMAGECOMPLIANCE2.toString() ||
-                        profile === ServiceProfile.STANFORDIIIF1IMAGECOMPLIANCE1.toString() ||
-                        profile === ServiceProfile.STANFORDIIIF1IMAGECOMPLIANCE2.toString() ||
-                        profile === ServiceProfile.STANFORDIIIFIMAGECONFORMANCE1.toString() ||
-                        profile === ServiceProfile.STANFORDIIIFIMAGECONFORMANCE2.toString() ||
-                        profile === ServiceProfile.STANFORDIIIF1IMAGECONFORMANCE1.toString() ||
-                        profile === ServiceProfile.STANFORDIIIF1IMAGECONFORMANCE2.toString() ||
-                        profile === ServiceProfile.IIIF1IMAGELEVEL1.toString() ||
-                        profile === ServiceProfile.IIIF1IMAGELEVEL2.toString()){
-                        uri = id + 'full/' + width + ',' + height + '/0/native.jpg';
-                    } else if (
-                        profile === ServiceProfile.IIIF2IMAGELEVEL1.toString() ||
-                        profile === ServiceProfile.IIIF2IMAGELEVEL2.toString()) {
-                        uri = id + 'full/' + width + ',' + height + '/0/default.jpg';
+                // shortcut if caller doesn't care about size
+                if (!options.size && !options.minimum && !options.maximum) {
+                    if (_isString(thumbnail)){
+                        thumb.uri = thumbnail;
+                        return thumb;
+                    } else if (_isArray(thumbnail) && _isString(thumbnail[0])){
+                        thumb.uri = thumbnail[0];
+                        return thumb;
                     }
                 }
-            }
 
-            return uri;
+                // first image resource in thumbnail property/array
+                var thumbImageResource: IResource;
+
+                if (_isArray(thumbnail)){
+                    thumbImageResource = thumbnail[0];
+                } else {
+                    thumbImageResource = thumbnail;
+                }
+
+                var thumbInfo: ThumbInfo = this._getThumbFromImageResource(thumbImageResource, options);
+
+
+
+            }
+            //var uri;
+            //var images: IAnnotation[] = this.getImages();
+            //
+            //if (images && images.length) {
+            //    var firstImage = images[0];
+            //    var resource: IResource = firstImage.getResource();
+            //    var services: IService[] = resource.getServices();
+            //
+            //    for (var i = 0; i < services.length; i++) {
+            //        var service:IService = services[i];
+            //        var profile:string = service.getProfile().toString();
+            //        var id = service.id;
+            //
+            //        if (!_endsWith(id, '/')) {
+            //            id += '/';
+            //        }
+            //
+            //        if (profile === ServiceProfile.STANFORDIIIFIMAGECOMPLIANCE1.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIFIMAGECOMPLIANCE2.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIF1IMAGECOMPLIANCE1.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIF1IMAGECOMPLIANCE2.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIFIMAGECONFORMANCE1.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIFIMAGECONFORMANCE2.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIF1IMAGECONFORMANCE1.toString() ||
+            //            profile === ServiceProfile.STANFORDIIIF1IMAGECONFORMANCE2.toString() ||
+            //            profile === ServiceProfile.IIIF1IMAGELEVEL1.toString() ||
+            //            profile === ServiceProfile.IIIF1IMAGELEVEL2.toString()){
+            //            uri = id + 'full/' + width + ',' + height + '/0/native.jpg';
+            //        } else if (
+            //            profile === ServiceProfile.IIIF2IMAGELEVEL1.toString() ||
+            //            profile === ServiceProfile.IIIF2IMAGELEVEL2.toString()) {
+            //            uri = id + 'full/' + width + ',' + height + '/0/default.jpg';
+            //        }
+            //    }
+            //}
+            //
+            //return uri;
+        }
+
+        private _getThumbFromImageResource(imageResource: IResource, options: ThumbOptions): ThumbInfo{
+
+            var imageService: IImageService = Utils.getImageService(imageResource);
+            // (the first service property with a recognised IIIF image service profile)
+            // it's possible the image resource does not have a service
+
+            // we need the profile, which MUST be present in the manifest, and the sizes array, which might not be.
+            if(options.followInfoJson && imageService && (!imageService.sizes || !Utils.getAuthService(<IResource>imageService))){
+                
+                imageService = (dereference info.json into what we hope is a more detailed service object)
+            }
         }
 
         getType(): CanvasType {

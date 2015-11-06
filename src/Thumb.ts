@@ -1,4 +1,3 @@
-
 module Manifesto {
     export class Thumb {
         constructor(public index: number,

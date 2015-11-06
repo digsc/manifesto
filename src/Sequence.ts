@@ -207,18 +207,18 @@ module Manifesto {
             for (var i = 0; i < this.getTotalCanvases(); i++) {
                 var canvas: ICanvas = this.getCanvasByIndex(i);
 
-                //if (!_isNumber(height)) {
-                    var heightRatio = canvas.getHeight() / canvas.getWidth();
-
-                    if (heightRatio) {
-                        height = Math.floor(width * heightRatio);
-                    }
+                //var heightRatio = canvas.getHeight() / canvas.getWidth();
+                //
+                //if (heightRatio) {
+                //    height = Math.floor(width * heightRatio);
                 //}
 
-                var uri = canvas.getThumbUri(width, height);
-                var label = canvas.getLabel();
+                var thumb: Thumb = canvas.getThumbnail();
+                thumb.index = i;
+                thumb.label = canvas.getLabel();
+                thumb.visible = true;
 
-                thumbs.push(new Manifesto.Thumb(i, uri, label, width, height, true));
+                thumbs.push(thumb);
             }
 
             return thumbs;

@@ -193,7 +193,7 @@ declare module Manifesto {
         ranges: IRange[];
         constructor(jsonld: any, options: IManifestoOptions);
         getImages(): IAnnotation[];
-        getThumbUri(width: number, height: number): string;
+        getThumbnail(options: ThumbOptions): ThumbInfo;
         getType(): CanvasType;
         getWidth(): number;
         getHeight(): number;
@@ -412,7 +412,7 @@ declare module Manifesto {
     interface ICanvas extends IManifestResource {
         getHeight(): number;
         getImages(): IAnnotation[];
-        getThumbUri(width: number, height: number): string;
+        getThumbnail(width: ThumbOptions): ThumbInfo;
         getType(): CanvasType;
         getWidth(): number;
     }
@@ -592,5 +592,30 @@ declare module Manifesto {
         getType(): ResourceType;
         getWidth(): number;
         getHeight(): number;
+    }
+}
+declare module Manifesto {
+    class ThumbInfo {
+        url: string;
+        width: number;
+        height: number;
+        constructor(url: string, width: number, height: number);
+    }
+}
+declare module Manifesto {
+    class ThumbOptions {
+        square: boolean;
+        size: ThumbSize;
+        minimum: ThumbSize;
+        maximum: ThumbSize;
+        followInfoJson: boolean;
+        constructor(square: boolean, size: ThumbSize, minimum: ThumbSize, maximum: ThumbSize, followInfoJson: boolean);
+    }
+}
+declare module Manifesto {
+    class ThumbSize {
+        width: number;
+        height: number;
+        constructor(width: number, height: number);
     }
 }

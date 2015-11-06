@@ -676,9 +676,7 @@ var Manifesto;
             }
             return images;
         };
-        // todo: Prefer thumbnail service to image service if supplied and if
-        // the thumbnail service can provide a satisfactory size +/- x pixels.
-        Canvas.prototype.getThumbUri = function (width, height) {
+        Canvas.prototype.getThumbnail = function (options) {
             var uri;
             var images = this.getImages();
             if (images && images.length) {
@@ -1899,4 +1897,41 @@ var Manifesto;
         return Resource;
     })(Manifesto.ManifestResource);
     Manifesto.Resource = Resource;
+})(Manifesto || (Manifesto = {}));
+var Manifesto;
+(function (Manifesto) {
+    var ThumbInfo = (function () {
+        function ThumbInfo(url, width, height) {
+            this.url = url;
+            this.width = width;
+            this.height = height;
+        }
+        return ThumbInfo;
+    })();
+    Manifesto.ThumbInfo = ThumbInfo;
+})(Manifesto || (Manifesto = {}));
+var Manifesto;
+(function (Manifesto) {
+    var ThumbOptions = (function () {
+        function ThumbOptions(square, size, minimum, maximum, followInfoJson) {
+            this.square = square;
+            this.size = size;
+            this.minimum = minimum;
+            this.maximum = maximum;
+            this.followInfoJson = followInfoJson;
+        }
+        return ThumbOptions;
+    })();
+    Manifesto.ThumbOptions = ThumbOptions;
+})(Manifesto || (Manifesto = {}));
+var Manifesto;
+(function (Manifesto) {
+    var ThumbSize = (function () {
+        function ThumbSize(width, height) {
+            this.width = width;
+            this.height = height;
+        }
+        return ThumbSize;
+    })();
+    Manifesto.ThumbSize = ThumbSize;
 })(Manifesto || (Manifesto = {}));

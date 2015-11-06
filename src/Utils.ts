@@ -381,5 +381,47 @@ module Manifesto {
 
             return services;
         }
+
+        static getAuthService(resource: IResource): IService {
+            var services: IService[] = resource.getServices();
+
+            for (var i = 0; i < services.length; i++) {
+                var service:IService = services[i];
+                var profile:string = service.getProfile().toString();
+
+                if (profile === ServiceProfile.LOGIN.toString() ||
+                    profile === ServiceProfile.CLICKTHROUGH.toString()) {
+                    return service;
+                }
+            }
+
+            return null;
+        }
+
+        static getImageService(resource: IResource): IImageService {
+            var services: IService[] = resource.getServices();
+
+            for (var i = 0; i < services.length; i++) {
+                var service:IService = services[i];
+                var profile:string = service.getProfile().toString();
+
+                if (profile === ServiceProfile.STANFORDIIIFIMAGECOMPLIANCE1.toString() ||
+                    profile === ServiceProfile.STANFORDIIIFIMAGECOMPLIANCE2.toString() ||
+                    profile === ServiceProfile.STANFORDIIIF1IMAGECOMPLIANCE1.toString() ||
+                    profile === ServiceProfile.STANFORDIIIF1IMAGECOMPLIANCE2.toString() ||
+                    profile === ServiceProfile.STANFORDIIIFIMAGECONFORMANCE1.toString() ||
+                    profile === ServiceProfile.STANFORDIIIFIMAGECONFORMANCE2.toString() ||
+                    profile === ServiceProfile.STANFORDIIIF1IMAGECONFORMANCE1.toString() ||
+                    profile === ServiceProfile.STANFORDIIIF1IMAGECONFORMANCE2.toString() ||
+                    profile === ServiceProfile.IIIF1IMAGELEVEL1.toString() ||
+                    profile === ServiceProfile.IIIF1IMAGELEVEL2.toString() ||
+                    profile === ServiceProfile.IIIF2IMAGELEVEL1.toString() ||
+                    profile === ServiceProfile.IIIF2IMAGELEVEL2.toString()) {
+                    return <IImageService>service;
+                }
+            }
+
+            return null;
+        }
     }
 }

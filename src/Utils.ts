@@ -268,7 +268,7 @@ module Manifesto {
         }
 
         static getResourceById(parentResource: IJSONLDResource, id: string): IJSONLDResource {
-            return <IJSONLDResource>parentResource.__jsonld.en().traverseUnique(x => Utils.getAllArrays(x))
+            return [<IJSONLDResource>parentResource.__jsonld].en().traverseUnique(x => Utils.getAllArrays(x))
                 .first(r => r['@id'] === id);
         }
 
@@ -284,8 +284,7 @@ module Manifesto {
                 }
             }
 
-            // flatten all objects into a single array
-            return all.selectMany(x => x);
+            return all;
         }
 
         static getService(resource: any, profile: ServiceProfile | string): IService {
@@ -306,23 +305,6 @@ module Manifesto {
             }
 
             return null;
-        }
-
-        static getServiceByReference(resource: any, id: string): any {
-
-            var service: IService;
-            var services: IService[] = this.getServices(resource.options.resource);
-
-            for (var i = 0; i < services.length; i++){
-                var s = services[i];
-
-                if (s.id === id){
-                    service = new Service(s.__jsonld, resource.options);
-                    break;
-                }
-            }
-
-            return service;
         }
 
         static getServices(resource: any): IService[] {
@@ -352,7 +334,7 @@ module Manifesto {
                     var r: IJSONLDResource = this.getResourceById(resource.options.resource, s);
 
                     if (r){
-                        services.push(new Service(r.__jsonld, resource.options));
+                        services.push(new Service(r.__jsonld || r, resource.options));
                     }
                 } else {
                     services.push(new Service(s, resource.options));

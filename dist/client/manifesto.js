@@ -1743,7 +1743,7 @@ var Manifesto;
             });
         };
         Utils.getResourceById = function (parentResource, id) {
-            return parentResource.__jsonld.en().traverseUnique(function (x) { return Utils.getAllArrays(x); })
+            return [parentResource.__jsonld].en().traverseUnique(function (x) { return Utils.getAllArrays(x); })
                 .first(function (r) { return r['@id'] === id; });
         };
         Utils.getAllArrays = function (obj) {
@@ -1756,8 +1756,7 @@ var Manifesto;
                     all = all.concat(val);
                 }
             }
-            // flatten all objects into a single array
-            return all.selectMany(function (x) { return x; });
+            return all;
         };
         Utils.getService = function (resource, profile) {
             var services = this.getServices(resource);
@@ -1772,18 +1771,6 @@ var Manifesto;
                 }
             }
             return null;
-        };
-        Utils.getServiceByReference = function (resource, id) {
-            var service;
-            var services = this.getServices(resource.options.resource);
-            for (var i = 0; i < services.length; i++) {
-                var s = services[i];
-                if (s.id === id) {
-                    service = new Manifesto.Service(s.__jsonld, resource.options);
-                    break;
-                }
-            }
-            return service;
         };
         Utils.getServices = function (resource) {
             var service;
@@ -1808,7 +1795,7 @@ var Manifesto;
                     //services.push(this.getServiceByReference(resource, s));
                     var r = this.getResourceById(resource.options.resource, s);
                     if (r) {
-                        services.push(new Manifesto.Service(r.__jsonld, resource.options));
+                        services.push(new Manifesto.Service(r.__jsonld || r, resource.options));
                     }
                 }
                 else {

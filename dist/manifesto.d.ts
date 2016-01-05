@@ -388,7 +388,6 @@ declare module Manifesto {
         static getResourceById(parentResource: IJSONLDResource, id: string): IJSONLDResource;
         static getAllArrays(obj: any): exjs.IEnumerable<any>;
         static getService(resource: any, profile: ServiceProfile | string): IService;
-        static getServiceByReference(resource: any, id: string): any;
         static getServices(resource: any): IService[];
     }
 }

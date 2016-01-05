@@ -267,6 +267,27 @@ module Manifesto {
             });
         }
 
+        static getResourceById(parentResource: IJSONLDResource, id: string): IJSONLDResource {
+            return <IJSONLDResource>parentResource.__jsonld.en().traverseUnique(x => Utils.getAllArrays(x))
+                .first(r => r['@id'] === id);
+        }
+
+        static getAllArrays(obj: any): exjs.IEnumerable<any> {
+            var all = [].en();
+
+            if (!obj) return all;
+
+            for (var key in obj) {
+                var val = obj[key];
+                if (_isArray(val)) {
+                    all = all.concat(val)
+                }
+            }
+
+            // flatten all objects into a single array
+            return all.selectMany(x => x);
+        }
+
         static getService(resource: any, profile: ServiceProfile | string): IService {
 
             var services: IService[] = this.getServices(resource);
@@ -326,8 +347,13 @@ module Manifesto {
             for (var i = 0; i < service.length; i++){
                 var s: any = service[i];
 
-                if (_isString(s) && resource !== resource.options.resource){
-                    services.push(this.getServiceByReference(resource, s));
+                if (_isString(s)){// && resource !== resource.options.resource){
+                    //services.push(this.getServiceByReference(resource, s));
+                    var r: IJSONLDResource = this.getResourceById(resource.options.resource, s);
+
+                    if (r){
+                        services.push(new Service(r.__jsonld, resource.options));
+                    }
                 } else {
                     services.push(new Service(s, resource.options));
                 }

@@ -6,6 +6,7 @@ module Manifesto {
         getMetadata(): any;
         getRendering(format: RenderingFormat | string): IRendering;
         getRenderings(): IRendering[];
+        getResourceById(id: string): IJSONLDResource;
         getService(profile: ServiceProfile | string): IService;
         getServices(): IService[];
     }

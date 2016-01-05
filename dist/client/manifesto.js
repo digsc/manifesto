@@ -684,6 +684,9 @@ var Manifesto;
             }
             return renderings;
         };
+        ManifestResource.prototype.getResourceById = function (id) {
+            return Manifesto.Utils.getResourceById(this, id);
+        };
         ManifestResource.prototype.getService = function (profile) {
             return Manifesto.Utils.getService(this, profile);
         };
@@ -1739,6 +1742,23 @@ var Manifesto;
                 });
             });
         };
+        Utils.getResourceById = function (parentResource, id) {
+            return parentResource.__jsonld.en().traverseUnique(function (x) { return Utils.getAllArrays(x); })
+                .first(function (r) { return r['@id'] === id; });
+        };
+        Utils.getAllArrays = function (obj) {
+            var all = [].en();
+            if (!obj)
+                return all;
+            for (var key in obj) {
+                var val = obj[key];
+                if (_isArray(val)) {
+                    all = all.concat(val);
+                }
+            }
+            // flatten all objects into a single array
+            return all.selectMany(function (x) { return x; });
+        };
         Utils.getService = function (resource, profile) {
             var services = this.getServices(resource);
             // coerce profile to string
@@ -1784,8 +1804,12 @@ var Manifesto;
             }
             for (var i = 0; i < service.length; i++) {
                 var s = service[i];
-                if (_isString(s) && resource !== resource.options.resource) {
-                    services.push(this.getServiceByReference(resource, s));
+                if (_isString(s)) {
+                    //services.push(this.getServiceByReference(resource, s));
+                    var r = this.getResourceById(resource.options.resource, s);
+                    if (r) {
+                        services.push(new Manifesto.Service(r.__jsonld, resource.options));
+                    }
                 }
                 else {
                     services.push(new Manifesto.Service(s, resource.options));

@@ -74,6 +74,10 @@ module Manifesto {
             return renderings;
         }
 
+        getResourceById(id: string): IJSONLDResource {
+            return Utils.getResourceById(this, id);
+        }
+
         getService(profile: ServiceProfile | string): IService {
             return Utils.getService(this, profile);
         }

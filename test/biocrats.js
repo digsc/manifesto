@@ -52,6 +52,13 @@ describe('#hasSequence', function() {
     });
 });
 
+describe('#hasThumbs', function() {
+    it('sequence has thumbs', function () {
+        var thumbs = sequence.getThumbs();
+        expect(thumbs).to.exist;
+    });
+});
+
 describe('#hasViewingHint', function() {
     it('sequence has a viewingHint', function () {
         var viewingHint = sequence.getViewingHint();

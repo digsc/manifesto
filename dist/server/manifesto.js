@@ -1477,7 +1477,7 @@ var Manifesto;
             if (children) {
                 for (var i = 0; i < children.length; i++) {
                     var child = this.parseCollection(children[i], options);
-                    child.index = i;
+                    //child.index = i;
                     child.parentCollection = collection;
                     collection.collections.push(child);
                 }
@@ -1491,7 +1491,7 @@ var Manifesto;
             if (children) {
                 for (var i = 0; i < children.length; i++) {
                     var child = this.parseManifest(children[i], options);
-                    child.index = i;
+                    //child.index = i;
                     child.parentCollection = collection;
                     collection.manifests.push(child);
                 }

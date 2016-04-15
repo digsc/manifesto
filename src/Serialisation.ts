@@ -47,7 +47,7 @@ module Manifesto {
             if (children) {
                 for (var i = 0; i < children.length; i++) {
                     var child: ICollection = this.parseCollection(children[i], options);
-                    child.index = i;
+                    //child.index = i;
                     child.parentCollection = collection;
                     collection.collections.push(child);
                 }
@@ -63,7 +63,7 @@ module Manifesto {
             if (children) {
                 for (var i = 0; i < children.length; i++) {
                     var child: IManifest = this.parseManifest(children[i], options);
-                    child.index = i;
+                    //child.index = i;
                     child.parentCollection = collection;
                     collection.manifests.push(child);
                 }

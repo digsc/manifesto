@@ -9,7 +9,6 @@ module Manifesto {
         getNavDate(): Date;
         getSeeAlso(): any;
         getTree(): ITreeNode;
-        index: number;
         isLoaded: boolean;
         load(): Promise<IIIIFResource>;
         parentCollection: ICollection;
